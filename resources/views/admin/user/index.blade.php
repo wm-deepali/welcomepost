@@ -166,7 +166,33 @@
                                                       </td>
                                                       
                                                       <td>
+                                                         @php
+                                                        
+                                                            $latestSubscription =
+                                                                $orderDetails->subscriptionhistory()
+                                                                    ->latest()
+                                                                    ->first();
+                                                        
+                                                            $hasPaidSubscription =
+                                                                $orderDetails->subscriptionhistory()
+                                                                    ->whereIn('type', ['Prime', 'Premium'])
+                                                                    ->exists();
+                                                        
+                                                        @endphp
+                                                        
+                                                        @if(!$hasPaidSubscription && $latestSubscription)
+                                                        
+                                                            <button type="button"
+                                                                    class="btn btn-success"
+                                                                    data-toggle="modal"
+                                                                    data-target="#editAdsModal{{ $orderDetails->id }}">
+                                                      
+                                                        Set Free Ad Limit
+                                                            </button>
+                                                        
+                                                        @endif
                                                           @if(isset($orderDetails->loginAttempt->is_account_locked)&&$orderDetails->loginAttempt->is_account_locked)
+
                                                           <a href="{{route('admin.unlock.account',$orderDetails->loginAttempt->id)}}" class="btn btn-primary">Unlock Account</a>
                                                           @endif
                                                           <a href="{{url('view-user/'.$orderDetails->id)}}" class="btn btn-primary"> View Profile</a>
@@ -183,6 +209,94 @@
                                                          
                                                       </td>
                                                    </tr>
+                                                   @php
+
+    $latestSubscription =
+        $orderDetails->subscriptionhistory()
+            ->latest()
+            ->first();
+
+    $hasPaidSubscription =
+        $orderDetails->subscriptionhistory()
+            ->whereIn('type', ['Prime', 'Premium'])
+            ->exists();
+
+@endphp
+
+@if(!$hasPaidSubscription && $latestSubscription)
+
+<div class="modal fade"
+     id="editAdsModal{{ $orderDetails->id }}">
+
+    <div class="modal-dialog">
+
+        <form action="{{ route('admin.update.remaining.ads') }}"
+              method="POST">
+
+            @csrf
+
+            <input type="hidden"
+                   name="subscription_id"
+                   value="{{ $latestSubscription->id }}">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                       Set Free Ad Posting Limit
+                    </h5>
+
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal">
+
+                        <span>&times;</span>
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label>
+                            Free Ad Posting Limit
+                        </label>
+
+                        <input type="number"
+                               name="remaining_ads"
+                               class="form-control"
+                               min="0"
+                               value="{{ $latestSubscription->remaining_ads }}"
+                               required>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        Update
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@endif
+
                                                    <div class="modal fade" id="modal-delete<?php echo $orderDetails->id; ?>">
                                                       <div class="modal-dialog">
                                                          <div class="modal-content">

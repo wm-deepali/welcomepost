@@ -208,7 +208,7 @@
 <script>
   $(function () {
 
-    $('#example1, #example3, #example5').DataTable({
+    $('#example1, #example3, #example5, #examples2').DataTable({
         destroy: true,
         autoWidth: false,
         ordering: true,
@@ -222,12 +222,7 @@
       "ordering": true,
       "order": [[0, "desc"]]
     });
-    $("#examples2").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-      "ordering": true,
-      "order": [[0, "desc"]]
-    });
+ 
     $("#examples3").DataTable({
       "responsive": true,
       "autoWidth": false,

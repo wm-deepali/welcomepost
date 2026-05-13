@@ -31,6 +31,7 @@ use App\Models\Propertyform;
 use App\Models\DefaultNotification;
 use App\Models\Subscription;
 use App\Models\Commonform;
+use App\Models\SubscriptionHistory;
 
 class AdsController extends Controller
 {
@@ -3307,6 +3308,40 @@ class AdsController extends Controller
 
         return redirect('admin.post.index')
             ->with('success', 'Advertisement deleted successfully.');
+    }
+
+    public function updateRemainingAds(Request $request)
+    {
+        $request->validate([
+
+            'subscription_id' => 'required|exists:subscription_history,id',
+
+            'remaining_ads' => 'required|integer|min:0',
+
+        ]);
+
+        $subscription = SubscriptionHistory::findOrFail(
+            $request->subscription_id
+        );
+
+        // only free subscription editable
+        if (in_array($subscription->type, ['Prime', 'Premium'])) {
+
+            return back()->with(
+                'error',
+                'Paid subscriptions cannot be modified'
+            );
+        }
+
+        $subscription->remaining_ads =
+            $request->remaining_ads;
+
+        $subscription->save();
+
+        return back()->with(
+            'success',
+            'Remaining ads updated successfully'
+        );
     }
 
 }

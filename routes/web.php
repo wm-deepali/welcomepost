@@ -707,6 +707,8 @@ Route::group(['middleware' => ['adminBasicAuth']], function () {
         Route::post('update-property-form/{id}',[AdsController::class, 'updatePropertyForm'])->middleware('check.subadmin.permission:ads_edit');
         Route::post('update-common-form/{id}',[AdsController::class, 'updateCommonForm'])->middleware('check.subadmin.permission:ads_edit');
 
+        Route::post('/update-remaining-ads',[AdsController::class, 'updateRemainingAds'])->name('admin.update.remaining.ads');
+
     });
 
     Route::get('job-ads', [App\Http\Controllers\AdminController::class, 'job_ads'])->name('job_ads')->middleware('check.subadmin.permission:ads_edit');
