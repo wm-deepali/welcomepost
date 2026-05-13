@@ -110,7 +110,7 @@
                                                       <th>Expiry Date</th>
                                                       <th>Registered Date</th>
                                                       <th>Reject</th>
-                                                      <!--<th>Action</th> -->
+                                                      <th>Action</th>
                                                    </tr>
                                                 </thead>
                                                 <tbody>
@@ -165,11 +165,11 @@
                                                       <td>
                                                         <button type="button" class="btn btn-danger" id="reject-button-{{ $orderDetails->id }}" data-toggle="modal" data-target="#rejectreason{{ $orderDetails->id }}">Reject</button>
                                                       </td>
-                                                      <!--<td>
-                                                         <a href="{{url('view-job-ads/'.$orderDetails->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>
+                                                      <td>
+                                                         <a href="{{url('ads/details/'.$orderDetails->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>
                                                          <a href="{{url('edit-job-ads/'.$orderDetails->id)}}"><button type="button" class="btn btn-warning"><i class="fa fa-edit"></i></button></a>
                                                          <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#modal-delete<?php echo $orderDetails->id; ?>"><i class="fa fa-trash"></i></button>
-                                                         </td>-->
+                                                         </td>
                                                    </tr>
                                                    <div class="modal fade" id="modal-delete<?php echo $orderDetails->id; ?>">
                                                       <div class="modal-dialog">
@@ -258,7 +258,7 @@
                                                                 <th>Publish Date</th>
                                                                 <th>Registered Date</th>
                                                                 <th>Reject</th>
-                                                                <!--<th>Action</th> -->
+                                                                <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -306,11 +306,11 @@
                                                                 <td>
                                                                     <button type="button" class="btn btn-danger" id="reject-button-{{$orderDetails->id}}" data-toggle="modal" data-target="#rejectreason{{$orderDetails->id}}">Reject</button>
                                                                 </td>
-                                                                <!--<td>
-                                                                    <a href="{{url('view-job-ads/'.$orderDetails->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>
+                                                                <td>
+                                                                    <a href="{{url('ads/details/'.$orderDetails->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>
                                                                     <a href="{{url('edit-job-ads/'.$orderDetails->id)}}"><button type="button" class="btn btn-warning"><i class="fa fa-edit"></i></button></a>
                                                                     <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#modal-delete{{$orderDetails->id}}"><i class="fa fa-trash"></i></button>
-                                                                </td>-->
+                                                                </td>
                                                             </tr>
                                                             <script>
                                                                 $(document).ready(function(){
@@ -404,7 +404,7 @@
                                                                 <th>Publish Date</th>
                                                                 <th>Registered Date</th>
                                                                 <th>Reject</th>
-                                                                <!--<th>Action</th> -->
+                                                                <th>Action</th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -442,7 +442,7 @@
                                                       <th>Status</th>
                                                       <th>Expiry Date</th>
                                                       <th>Registered Date</th>
-                                                      <!--<th>Action</th> -->
+                                                      <th>Action</th>
                                                    </tr>
                                                 </thead>
                                                 <tbody>
@@ -483,11 +483,11 @@
                                                       <input type="hidden" id="proff_id<?php echo $orderDetails->id;?>" value="<?php echo $orderDetails->id; ?>">
                                                       <td>{{$orderDetails->ad_expiry}}</td>
                                                       <td>{{$orderDetails->created_at}}</td>
-                                                      <!--<td>
-                                                         <a href="{{url('view-job-ads/'.$orderDetails->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>
+                                                      <td>
+                                                         <a href="{{url('ads/details/'.$orderDetails->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>
                                                          <a href="{{url('edit-job-ads/'.$orderDetails->id)}}"><button type="button" class="btn btn-warning"><i class="fa fa-edit"></i></button></a>
                                                          <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#modal-delete<?php echo $orderDetails->id; ?>"><i class="fa fa-trash"></i></button>
-                                                         </td> -->
+                                                         </td>
                                                    </tr>
                                                    <script>
                                                       $(document).ready(function(){
@@ -579,7 +579,7 @@
                                                       <th>Status</th>
                                                       <th>Expiry Date</th>
                                                       <th>Registered Date</th>
-                                                      <!--<th>Action</th> -->
+                                                      <th>Action</th>
                                                    </tr>
                                                 </tfoot>
                                              </table>
@@ -695,5 +695,13 @@ function changeState(selectElement, proff_id) {
             });
         });
     });
+</script>
+<script>
+$(window).on('load', function () {
+
+    $($.fn.dataTable.tables(true)).DataTable()
+        .columns.adjust();
+
+});
 </script>
 @endsection

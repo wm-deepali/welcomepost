@@ -10,6 +10,18 @@
     $deletedCustomerCount = \App\Models\Customer::where('delete_status','1')->count();
     $admin = App\Models\Adminsettings::first();
 @endphp
+<style>
+    div.dataTables_wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table.dataTable {
+        width: 100% !important;
+        white-space: nowrap;
+    }
+</style>
+
 <div class="wrapper">
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -358,7 +370,7 @@
                </a>
                <ul class="nav nav-treeview">
                   <li class="nav-item">
-                     <a href="{{url('ads')}}" class="nav-link ">
+                     <a href="{{url('admin/ads')}}" class="nav-link ">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Manage Ads</p>
                      </a>

@@ -308,7 +308,7 @@ input:checked + .slider:before {
     											<input type="hidden" class="hidden_state_name" value="" name="state_name">
     											<li>City<span class="float-right city_name" >{{ @$locationinfo->cityName}}</span></li>
     											<input type="hidden" class="hidden_neibourhood" value="" name="neibourhood_name">
-    											<li>Neighbourhood<span class="float-right">{{ @$locationinfo->latitude}}{{ $locationinfo->longitude}}</span></li>
+    											<li>Neighbourhood<span class="float-right">{{ @$locationinfo->latitude ?? ''}}{{ $locationinfo->longitude ?? ''}}</span></li>
                                             </ul>
                                         </div>     
                                     </div>

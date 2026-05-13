@@ -207,7 +207,15 @@
 
 <script>
   $(function () {
-    
+
+    $('#example1, #example3, #example5').DataTable({
+        destroy: true,
+        autoWidth: false,
+        ordering: true,
+        pageLength: 10,
+        order: [[0, 'desc']]
+    });
+  
     $("#examples1").DataTable({
       "responsive": true,
       "autoWidth": false,
@@ -244,12 +252,7 @@
       "ordering": true,
       "order": [[0, "desc"]]
     });
-    $("#example1").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-      "ordering": true,
-      "order": [[0, "desc"]]
-    });
+   
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,
@@ -264,10 +267,7 @@
 
 <script>
   $(function () {
-    $("#example3").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-    });
+   
     $('#example4').DataTable({
       "paging": true,
       "lengthChange": false,
@@ -282,10 +282,7 @@
 
 <script>
   $(function () {
-    $("#example5").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-    });
+   
     $('#example6').DataTable({
       "paging": true,
       "lengthChange": false,

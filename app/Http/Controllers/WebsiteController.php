@@ -2621,8 +2621,22 @@ class WebsiteController extends Controller
 			->where('active_status', '0')
 			->count('id');
 
-			
 		$category_id_exists = DB::table('subscriptions_free_trials')->where('category_id', $category_id)->exists();
+
+		$result_category_id = DB::table('subscriptions_free_trials')
+			->where('category_id', $category_id)
+			->get();
+
+		$no_of_ads = $result_category_id[0]->no_of_ads ?? 0;
+
+		$active_postings_count = DB::table('ads_postings')
+			->where('user_id', $user_id)
+			->where('ad_type', 'Free')
+			->where('active_status', '1')
+			->count('id');
+
+		$ads_validity = $result_category_id[0]->ads_validity ?? 0;
+
 		if ($category_subscription_exists) {
 			//$category_subscription_result = DB::table('subscription_orders')->where('category_id',$category_id)->where('user_id',$user_id)->get();
 
@@ -8782,43 +8796,43 @@ class WebsiteController extends Controller
 				$resultPro = DB::table('customers')->where('id', $row->user_id)->get();
 				if (!isset($admin) && $admin != 1) {
 					?>
-									<div class="<?php echo ($row->user_id == $session_user_id) ? 'chat-message-right' : 'chat-message-left'; ?> pb-4">
-										<div>
-											<img src="<?php echo $resultPro[0]->image; ?>" class="rounded-circle mr-1" alt="<?php echo $resultPro[0]->name; ?>" width="40" height="40">
-											<div class="text-muted small text-nowrap mt-2"><?php echo $resultPro[0]->name; ?></div>
-										</div>
-										<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-											<div class="font-weight-bold mb-1"><?php echo $row->topic; ?></div>
-											<?php
-											$created_at = date_create($row->created_at);
-											$created_date = date_format($created_at, "d-m-Y");
-											$created_time = date_format($created_at, "H:i A");
-											?>
-											<p style="margin-top:10px;"><?php echo $created_date; ?> | <?php echo $created_time; ?></p>
-										</div>
-									</div>
-								<?php } else {
+														<div class="<?php echo ($row->user_id == $session_user_id) ? 'chat-message-right' : 'chat-message-left'; ?> pb-4">
+															<div>
+																<img src="<?php echo $resultPro[0]->image; ?>" class="rounded-circle mr-1" alt="<?php echo $resultPro[0]->name; ?>" width="40" height="40">
+																<div class="text-muted small text-nowrap mt-2"><?php echo $resultPro[0]->name; ?></div>
+															</div>
+															<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+																<div class="font-weight-bold mb-1"><?php echo $row->topic; ?></div>
+																<?php
+																$created_at = date_create($row->created_at);
+																$created_date = date_format($created_at, "d-m-Y");
+																$created_time = date_format($created_at, "H:i A");
+																?>
+																<p style="margin-top:10px;"><?php echo $created_date; ?> | <?php echo $created_time; ?></p>
+															</div>
+														</div>
+												<?php } else {
 					$subs_date = explode(" ", $row->created_at);
 					$dats_subs = date_create($subs_date[0]);
 					$time_subs = date_create($subs_date[1]);
 
 					if ($session_user_id == $row->reciever_id) {
 						?>
-												<div class="chat-text" style="margin-top:20px;">
-													<span class="message"><?php echo $row->topic; ?></span>
-													<p style="margin-top:10px;"><?php echo date_format($dats_subs, "d-m-Y"); ?> | <?php echo date_format($time_subs, "H:i A"); ?></p>
-												</div>
-												<?php
+																		<div class="chat-text" style="margin-top:20px;">
+																			<span class="message"><?php echo $row->topic; ?></span>
+																			<p style="margin-top:10px;"><?php echo date_format($dats_subs, "d-m-Y"); ?> | <?php echo date_format($time_subs, "H:i A"); ?></p>
+																		</div>
+																		<?php
 					} else {
 						?>
-												<div class="chat-text right" style="margin-top:20px;">
-													<span class="message"><?php echo $row->topic; ?></span>
-													<p style="margin-left: 444px; margin-top:10px;"><?php echo date_format($dats_subs, "d-m-Y"); ?> | <?php echo date_format($time_subs, "H:i A"); ?></p>
-												</div>
+																		<div class="chat-text right" style="margin-top:20px;">
+																			<span class="message"><?php echo $row->topic; ?></span>
+																			<p style="margin-left: 444px; margin-top:10px;"><?php echo date_format($dats_subs, "d-m-Y"); ?> | <?php echo date_format($time_subs, "H:i A"); ?></p>
+																		</div>
 						
-									<?php }
+														<?php }
 				} ?>
-							<?php
+											<?php
 			}
 		}
 	}
@@ -8837,22 +8851,22 @@ class WebsiteController extends Controller
 			$resultPro = DB::table('customers')->where('id', $row->user_id)->get();
 			if (!isset($admin) && $admin != 1) {
 				?>
-								<div class="<?php echo ($row->user_id == $session_user_id) ? 'chat-message-right' : 'chat-message-left'; ?> pb-4">
-									<div>
-										<img src="<?php echo $resultPro[0]->image; ?>" class="rounded-circle mr-1" alt="<?php echo $resultPro[0]->name; ?>" width="40" height="40">
-										<div class="text-muted small text-nowrap mt-2"><?php echo $resultPro[0]->name; ?></div>
-									</div>
-									<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-										<div class="font-weight-bold mb-1"><?php echo $row->topic; ?></div>
-										<?php
-										$created_at = date_create($row->created_at);
-										$created_date = date_format($created_at, "d-m-Y");
-										$created_time = date_format($created_at, "H:i A");
-										?>
-										<p style="margin-top:10px;"><?php echo $created_date; ?> | <?php echo $created_time; ?></p>
-									</div>
-								</div>
-								<?php
+												<div class="<?php echo ($row->user_id == $session_user_id) ? 'chat-message-right' : 'chat-message-left'; ?> pb-4">
+													<div>
+														<img src="<?php echo $resultPro[0]->image; ?>" class="rounded-circle mr-1" alt="<?php echo $resultPro[0]->name; ?>" width="40" height="40">
+														<div class="text-muted small text-nowrap mt-2"><?php echo $resultPro[0]->name; ?></div>
+													</div>
+													<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+														<div class="font-weight-bold mb-1"><?php echo $row->topic; ?></div>
+														<?php
+														$created_at = date_create($row->created_at);
+														$created_date = date_format($created_at, "d-m-Y");
+														$created_time = date_format($created_at, "H:i A");
+														?>
+														<p style="margin-top:10px;"><?php echo $created_date; ?> | <?php echo $created_time; ?></p>
+													</div>
+												</div>
+												<?php
 			} else {
 				$subs_date = explode(" ", $row->created_at);
 				$dats_subs = date_create($subs_date[0]);
@@ -8860,18 +8874,18 @@ class WebsiteController extends Controller
 
 				if ($session_user_id == $row->reciever_id) {
 					?>
-										<div class="chat-text" style="margin-top:20px;">
-											<span class="message"><?php echo $row->topic; ?></span>
-											<p style="margin-top:10px;"><?php echo date_format($dats_subs, "d-m-Y"); ?> | <?php echo date_format($time_subs, "H:i A"); ?></p>
-										</div>
-										<?php
+															<div class="chat-text" style="margin-top:20px;">
+																<span class="message"><?php echo $row->topic; ?></span>
+																<p style="margin-top:10px;"><?php echo date_format($dats_subs, "d-m-Y"); ?> | <?php echo date_format($time_subs, "H:i A"); ?></p>
+															</div>
+															<?php
 				} else {
 					?>
-										<div class="chat-text right" style="margin-top:20px;">
-											<span class="message"><?php echo $row->topic; ?></span>
-											<p style="margin-left: 444px; margin-top:10px;"><?php echo date_format($dats_subs, "d-m-Y"); ?> | <?php echo date_format($time_subs, "H:i A"); ?></p>
-										</div>
-										<?php
+															<div class="chat-text right" style="margin-top:20px;">
+																<span class="message"><?php echo $row->topic; ?></span>
+																<p style="margin-left: 444px; margin-top:10px;"><?php echo date_format($dats_subs, "d-m-Y"); ?> | <?php echo date_format($time_subs, "H:i A"); ?></p>
+															</div>
+															<?php
 				}
 			}
 		}

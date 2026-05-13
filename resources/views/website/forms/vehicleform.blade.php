@@ -132,7 +132,8 @@ input:checked + .slider:before {
 								<div class="add-heading">Brand</div>
 								<div class="select-add-type">
 									<div class="form-group">
-										<select name="brands" id="brands"class="form-control chosen-select" style="display: none;">
+										<select name="brands" id="brands"class="form-control chosen-select" 
+                    >
 											<option value="">Select Brand</option>
 											@if(isset($brand))
 											@foreach($brand as $orderDetail)

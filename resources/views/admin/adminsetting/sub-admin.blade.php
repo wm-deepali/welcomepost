@@ -59,7 +59,7 @@
                     <section class="content">
                               <div class="container-fluid">
                                  <div class="row">
-                                    <div class="col-10">
+                                    <div class="col-12">
                                        <div class="card">
                                           <!-- /.card-header -->
                                           <div class="card-body">
@@ -186,43 +186,43 @@
                   <!-- Permissions -->
                   <div class="form-group">
                     <label for="role">Permissions:</label>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;"> 
                       <input type="checkbox" class="form-check-input" id="masterEdit" name="masterEdit">
                       <label class="form-check-label" for="masterEdit">Master Settings</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="userEdit" name="userEdit">
                       <label class="form-check-label" for="userEdit">Users</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="chatEdit" name="chatEdit">
                       <label class="form-check-label" for="chatEdit">Chat Support</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="invoiceEdit" name="invoiceEdit">
                       <label class="form-check-label" for="invoiceEdit">Invoice and Orders</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="subscriptionEdit" name="subscriptionEdit">
                       <label class="form-check-label" for="subscriptionEdit">Subscription</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="adsEdit" name="adsEdit">
                       <label class="form-check-label" for="adsEdit">Ads Inquiries</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="contentEdit" name="contentEdit">
                       <label class="form-check-label" for="contentEdit">Content Management</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="helpEdit" name="helpEdit">
                       <label class="form-check-label" for="helpEdit">Help and Support</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="walletEdit" name="walletEdit">
                       <label class="form-check-label" for="walletEdit">Wallet & Payouts</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" style="display: flex; align-items: center;">
                       <input type="checkbox" class="form-check-input" id="misEdit" name="misEdit">
                       <label class="form-check-label" for="misEdit">MIS Reports</label>
                     </div>
