@@ -32,14 +32,17 @@ use App\Models\DefaultNotification;
 use App\Models\Subscription;
 use App\Models\Commonform;
 use App\Models\SubscriptionHistory;
+use Illuminate\Support\Str;
+use App\Models\CustomerVerify;
+use App\Mail\EmailVerificationEmail;
 
 class AdsController extends Controller
 {
     public function index()
     {
-        $data['pending'] = Adposting::where('delete_status', '0')->where('status', '0')->orderby('id', 'desc')->get();
-        $data['published'] = Adposting::where('delete_status', '0')->where('status', '1')->orderby('id', 'desc')->get();
-        $data['rejected'] = Adposting::where('delete_status', '0')->where('status', '2')->orderby('id', 'desc')->get();
+        $data['pending'] = Adposting::where('delete_status', '0')->where('status', '0')->get();
+        $data['published'] = Adposting::where('delete_status', '0')->where('status', '1')->get();
+        $data['rejected'] = Adposting::where('delete_status', '0')->where('status', '2')->get();
         return view('admin.ads.index', $data);
     }
 
@@ -131,27 +134,50 @@ class AdsController extends Controller
 
     public function findCustomer(Request $request)
     {
-        $customer = Customer::query()
+        $request->validate([
 
-            ->when($request->mobile, function ($query) use ($request) {
+            'mobile' => [
+                'nullable',
+                'regex:/^[6-9]\d{9}$/',
+                'required_without:email'
+            ],
 
-                $query->where('mobile', $request->mobile);
+            'email' => [
+                'nullable',
+                'email',
+                'required_without:mobile'
+            ]
 
-            })
+        ], [
 
-            ->when($request->email, function ($query) use ($request) {
+            'mobile.regex' => 'Please enter a valid Indian mobile number.',
+            'mobile.required_without' => 'Mobile or email is required.',
 
-                $query->orWhere('email', $request->email);
+            'email.email' => 'Please enter a valid email address.',
+            'email.required_without' => 'Email or mobile is required.'
 
-            })
+        ]);
 
-            ->first();
+        $customer = null;
+
+        // Check by mobile first
+        if (!empty($request->mobile)) {
+
+            $customer = Customer::where('mobile', $request->mobile)->first();
+        }
+
+        // If not found, then check by email
+        if (!$customer && !empty($request->email)) {
+
+            $customer = Customer::where('email', $request->email)->first();
+        }
 
         if ($customer) {
 
             return response()->json([
 
                 'status' => true,
+                'message' => 'Existing customer found.',
 
                 'customer' => [
 
@@ -168,7 +194,8 @@ class AdsController extends Controller
 
         return response()->json([
 
-            'status' => false
+            'status' => false,
+            'message' => 'Customer not found. Create new customer.'
 
         ]);
     }
@@ -272,6 +299,48 @@ class AdsController extends Controller
         $customer->referral_code = strtoupper($namePart . $mobilePart);
 
         $customer->save();
+
+        $token = Str::random(64);
+
+        CustomerVerify::create([
+            'customer_id' => $customer->id,
+            'token' => $token
+        ]);
+
+        $mailData = ['token' => $token];
+
+        Mail::to($customer->email)->send(
+            new EmailVerificationEmail($mailData)
+        );
+
+        $userStateName = States::where('id', $request->customer_state)->first();
+
+        $userCityName = City::where('id', $request->customer_city)->first();
+
+        $customerEmailDetail = array(
+
+            'name' => $customer->name,
+            'password' => $password,
+            'email' => $customer->email,
+            'mobile' => $customer->mobile,
+            'member_id' => $customer->member_id,
+            'pin' => '',
+            'state' => $userStateName->name ?? "",
+            'city' => $userCityName->name ?? "",
+            'country' => 'India',
+
+        );
+
+        $messagead = '';
+
+        Mail::send('email.new-user-register', $customerEmailDetail, function ($messagead) use ($customerEmailDetail) {
+
+            $messagead->to($customerEmailDetail['email'], $customerEmailDetail['name'])
+                ->subject('Welcome to Welcome Post');
+
+            $messagead->from('noreply@yourdomain.com', 'Welcome Post');
+
+        });
 
         return response()->json([
 
@@ -424,6 +493,7 @@ class AdsController extends Controller
 
     public function post_job_form(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:50|min:0',
             'email' => 'required|max:50|min:0',
@@ -443,6 +513,7 @@ class AdsController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
         $subscription = '0';
         $category_id = $request->category_id;
         $user_id = $request->user_id;
@@ -465,12 +536,12 @@ class AdsController extends Controller
 | AUTO ASSIGN FREE SUBSCRIPTION FOR ADMIN POSTING
 |--------------------------------------------------------------------------
 */
-
         if (!$category_subscription_exists) {
 
             $freeSubscription = DB::table('subscriptions')
                 ->where('is_free', 'yes')
                 ->first();
+
 
             if ($freeSubscription) {
 
@@ -567,7 +638,6 @@ class AdsController extends Controller
 
         $userprofile = new Adposting;
 
-
         $userprofile->ad_id = mt_rand(1500, 5000);
         $userprofile->user_id = $request->user_id;
         $userprofile->subscription_id = $category_subscription_result[0]->id;
@@ -590,7 +660,10 @@ class AdsController extends Controller
         $userprofile->description = $request->description;
         $userprofile->city = $request->city;
         $userprofile->delete_status = '0';
-        $userprofile->status = '0';
+        $userprofile->status = '1';
+        $userprofile->published_date = date("d-m-Y");
+        $userprofile->ad_expiry = $category_subscription_result[0]->subscription_expiry;
+        $userprofile->active_status = 1;
 
         $ads_id = $userprofile->ad_id;
 
@@ -868,8 +941,10 @@ class AdsController extends Controller
         $userprofile->ads_validity = $ads_validity;
         $userprofile->description = $request->description;
         $userprofile->delete_status = '0';
-        $userprofile->status = '0';
-
+        $userprofile->status = '1';
+        $userprofile->published_date = date("d-m-Y");
+        $userprofile->ad_expiry = $category_subscription_result[0]->subscription_expiry;
+        $userprofile->active_status = 1;
         $ads_id = $userprofile->ad_id;
 
         if ($request->hasFile('file')) {
@@ -1148,7 +1223,10 @@ class AdsController extends Controller
         $userprofile->description = $request->description;
         $userprofile->subscription_id = $category_subscription_result[0]->id;
         $userprofile->delete_status = '0';
-        $userprofile->status = '0';
+        $userprofile->status = '1';
+        $userprofile->published_date = date("d-m-Y");
+        $userprofile->ad_expiry = $category_subscription_result[0]->subscription_expiry;
+        $userprofile->active_status = 1;
 
         $ads_id = $userprofile->ad_id;
 
@@ -1443,7 +1521,10 @@ class AdsController extends Controller
         $userprofile->ads_validity = $ads_validity;
         $userprofile->description = $request->description;
         $userprofile->delete_status = '0';
-        $userprofile->status = '0';
+        $userprofile->status = '1';
+        $userprofile->published_date = date("d-m-Y");
+        $userprofile->ad_expiry = $category_subscription_result[0]->subscription_expiry;
+        $userprofile->active_status = 1;
         $userprofile->save();
 
         $ads_id = $userprofile->ad_id;
@@ -1752,7 +1833,10 @@ class AdsController extends Controller
         $userprofile->ads_validity = $ads_validity;
         $userprofile->description = $request->description;
         $userprofile->delete_status = '0';
-        $userprofile->status = '0';
+        $userprofile->status = '1';
+        $userprofile->published_date = date("d-m-Y");
+        $userprofile->ad_expiry = $category_subscription_result[0]->subscription_expiry;
+        $userprofile->active_status = 1;
 
         $ads_id = $userprofile->ad_id;
 

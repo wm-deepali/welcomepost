@@ -773,4 +773,358 @@ $(document).on("click", "ul.tabs li", function(){
 
 });
 
+
+$(document).on("submit", "#login_form", function(e) {
+
+    $(".frontend-error").remove();
+
+    let hasError = false;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get Values
+    |--------------------------------------------------------------------------
+    */
+
+    let property_type = $("#hidden-property-type").val();
+
+    let residence_status = $("#hidden-residence-status").val();
+
+    let furnishing_status = $("#hidden-furnishing-status").val();
+
+    let construction_status = $("#hidden-construction-status").val();
+
+    let listed_by = $("#hidden-listed-by").val();
+
+    let plot_type = $("#hidden-plot-type").val();
+
+    let price_mention = $("#hidden-price-mention").val();
+
+    let car_parking = $("#hidden-car-parking").val();
+
+    let facing = $("select[name='facing']").val();
+
+    let builtup_area = $("#builtup_area").val().trim();
+
+    let carpet_area = $("#carpet_area").val().trim();
+
+    let maintenance = $("input[name='maintenance']").val().trim();
+
+    let total_floor = $("#total_floor").val().trim();
+
+    let floor_no = $("#floor_no").val().trim();
+
+    let project_name = $("#project-name").val().trim();
+
+    let ad_title = $("#ad_title").val().trim();
+
+    let description = $("#description").val().trim();
+
+    let price = $("#price").val().trim();
+
+    let state = $("#state").val();
+
+    let city = $("#city").val();
+
+    let neighbourhood = $("#neibourhood").val().trim();
+
+    let file = $("#imgupload")[0].files.length;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Property Type
+    |--------------------------------------------------------------------------
+    */
+
+    if (property_type == '') {
+
+        $(".property_type").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select property type</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Residence
+    |--------------------------------------------------------------------------
+    */
+
+    if (residence_status == '') {
+
+        $(".residence_status").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select residence status</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Furnishing
+    |--------------------------------------------------------------------------
+    */
+
+    if (furnishing_status == '') {
+
+        $(".furnishing_status").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select furnishing status</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Construction
+    |--------------------------------------------------------------------------
+    */
+
+    if (construction_status == '') {
+
+        $(".construction_status").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select construction status</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Listed By
+    |--------------------------------------------------------------------------
+    */
+
+    if (listed_by == '') {
+
+        $(".listed_by").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select listed by</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Plot Type
+    |--------------------------------------------------------------------------
+    */
+
+    if (plot_type == '') {
+
+        $(".plot_type").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select plot type</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Price Mention
+    |--------------------------------------------------------------------------
+    */
+
+    if (price_mention == '') {
+
+        $(".price_mention").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select price type</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Car Parking
+    |--------------------------------------------------------------------------
+    */
+
+    if (car_parking == '') {
+
+        $(".car_parking").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select car parking</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Facing
+    |--------------------------------------------------------------------------
+    */
+
+    if (facing == '') {
+
+        $("select[name='facing']").after(
+            '<small class="text-danger frontend-error">Please select facing</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Builtup Area
+    |--------------------------------------------------------------------------
+    */
+
+    if (builtup_area == '') {
+
+        $("#builtup_area").after(
+            '<small class="text-danger frontend-error">Builtup area is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Carpet Area
+    |--------------------------------------------------------------------------
+    */
+
+    if (carpet_area == '') {
+
+        $("#carpet_area").after(
+            '<small class="text-danger frontend-error">Carpet area is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Project Name
+    |--------------------------------------------------------------------------
+    */
+
+    if (project_name == '') {
+
+        $("#project-name").after(
+            '<small class="text-danger frontend-error">Project name is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ad Title
+    |--------------------------------------------------------------------------
+    */
+
+    if (ad_title == '') {
+
+        $("#ad_title").after(
+            '<small class="text-danger frontend-error">Ad title is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Description
+    |--------------------------------------------------------------------------
+    */
+
+    if (description == '') {
+
+        $("#description").after(
+            '<small class="text-danger frontend-error">Description is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Price
+    |--------------------------------------------------------------------------
+    */
+
+    if (price == '') {
+
+        $("#price").after(
+            '<small class="text-danger frontend-error">Price is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Image
+    |--------------------------------------------------------------------------
+    */
+
+    if (file == 0 && $("#blah").attr('src') == '#') {
+
+        $("#image").after(
+            '<small class="text-danger frontend-error d-block">At least 1 image is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Location
+    |--------------------------------------------------------------------------
+    */
+
+    if ($("#list").hasClass("current")) {
+
+        if (state == '') {
+
+            $("#state").after(
+                '<small class="text-danger frontend-error">Please select state</small>'
+            );
+
+            hasError = true;
+        }
+
+        if (city == '') {
+
+            $("#city").after(
+                '<small class="text-danger frontend-error">Please select city</small>'
+            );
+
+            hasError = true;
+        }
+
+        if (neighbourhood == '') {
+
+            $("#neibourhood").after(
+                '<small class="text-danger frontend-error">Neighbourhood is required</small>'
+            );
+
+            hasError = true;
+        }
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stop Submit
+    |--------------------------------------------------------------------------
+    */
+
+    if (hasError) {
+
+        e.preventDefault();
+
+        $('html, body').animate({
+
+            scrollTop: $(".frontend-error").first().offset().top - 120
+
+        }, 500);
+
+    }
+
+});
+
 </script>

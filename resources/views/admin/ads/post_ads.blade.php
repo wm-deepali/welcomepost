@@ -2,7 +2,7 @@
 
 @section('content')
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <style>
         .content-wrapper {
@@ -209,7 +209,7 @@
 
         }
 
-         .add-post-container {
+        .add-post-container {
             background: #fff;
             border-radius: 14px;
             padding: 30px;
@@ -480,7 +480,8 @@
                                     </label>
 
                                     <input type="text" id="customer_mobile" class="form-control"
-                                        placeholder="Enter mobile number">
+                                        placeholder="Enter 10 digit mobile number" maxlength="10" pattern="[6-9]{1}[0-9]{9}"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)">
 
                                 </div>
 
@@ -580,8 +581,10 @@
                                             <label>
                                                 Mobile
                                             </label>
-
-                                            <input type="text" name="mobile" class="form-control" id="new_mobile" required>
+                                            <input type="text" name="mobile" class="form-control" id="new_mobile"
+                                                maxlength="10" pattern="[6-9]{1}[0-9]{9}"
+                                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)"
+                                                required>
 
                                         </div>
 
@@ -759,7 +762,6 @@
                         </div>
 
                     </div>
-
                     {{-- Dynamic Form --}}
                     <div id="dynamicFormArea"></div>
 
@@ -770,6 +772,38 @@
         </section>
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if ($errors->any())
+
+        <script>
+
+            Swal.fire({
+
+                icon: 'error',
+
+                title: 'Validation Error',
+
+                html: `
+                    <div style="text-align:left;">
+                        @foreach ($errors->all() as $error)
+                            <div style="margin-bottom:8px;">
+                                • {{ $error }}
+                            </div>
+                        @endforeach
+                    </div>
+                `,
+
+                confirmButtonText: 'OK',
+
+                timer: 5000,
+
+                timerProgressBar: true
+
+            });
+
+        </script>
+
+    @endif
 
     <script>
 
@@ -785,7 +819,7 @@
 
             @foreach($allcategories as $category)
 
-                "{{ $category->id }}": [
+                                    "{{ $category->id }}": [
 
                 @php
 
@@ -797,20 +831,20 @@
 
                 @endphp
 
-                    @foreach($subcats as $sub)
+                                        @foreach($subcats as $sub)
 
-                                {
-                            id: "{{ $sub->id }}",
-                            name: "{{ $sub->name }}"
-                        },
+                                                                                                                                                        {
+                                                id: "{{ $sub->id }}",
+                                                name: "{{ $sub->name }}"
+                                            },
 
-                    @endforeach
+                                        @endforeach
 
-                ],
+                                    ],
 
             @endforeach
 
-        };
+                            };
 
         /*
         |--------------------------------------------------------------------------
@@ -820,8 +854,21 @@
 
         $("#findCustomerBtn").click(function () {
 
-            let mobile = $("#customer_mobile").val();
-            let email = $("#customer_email").val();
+            let mobile = $("#customer_mobile").val().trim();
+            let email = $("#customer_email").val().trim();
+
+            let mobileRegex = /^[6-9]\d{9}$/;
+
+            $(".mobile-error").remove();
+
+            if (mobile !== '' && !mobileRegex.test(mobile)) {
+
+                $("#customer_mobile").after(
+                    '<small class="text-danger mobile-error">Enter valid Indian mobile number</small>'
+                );
+
+                return;
+            }
 
             $.ajax({
 
@@ -850,8 +897,8 @@
                         if (response.customer.image) {
 
                             $("#customerAvatar").html(`
-                                <img src="${response.customer.image}">
-                            `);
+                                                    <img src="${response.customer.image}">
+                                                `);
 
                         } else {
 
@@ -883,6 +930,29 @@
 
                     }
 
+                },
+                error: function (xhr) {
+
+                    $(".mobile-error").remove();
+
+                    if (xhr.status === 422) {
+
+                        let errors = xhr.responseJSON.errors;
+
+                        if (errors.mobile) {
+
+                            $("#customer_mobile").after(
+                                '<small class="text-danger mobile-error">' + errors.mobile[0] + '</small>'
+                            );
+                        }
+
+                        if (errors.email) {
+
+                            $("#customer_email").after(
+                                '<small class="text-danger mobile-error">' + errors.email[0] + '</small>'
+                            );
+                        }
+                    }
                 }
 
             });
@@ -936,8 +1006,8 @@
                     if (response.customer.image) {
 
                         $("#customerAvatar").html(`
-                        <img src="${response.customer.image}">
-                    `);
+                                            <img src="${response.customer.image}">
+                                        `);
 
                     } else {
 
@@ -1010,10 +1080,10 @@
             let category_id = $(this).val();
 
             let options = `
-                <option value="">
-                    Select Subcategory
-                </option>
-            `;
+                                    <option value="">
+                                        Select Subcategory
+                                    </option>
+                                `;
 
             $("#dynamicFormArea").html('');
 
@@ -1022,10 +1092,10 @@
                 subcategories[category_id].forEach(function (sub) {
 
                     options += `
-                        <option value="${sub.id}">
-                            ${sub.name}
-                        </option>
-                    `;
+                                            <option value="${sub.id}">
+                                                ${sub.name}
+                                            </option>
+                                        `;
 
                 });
 
@@ -1248,6 +1318,105 @@
                 reader.readAsDataURL(file);
             }
         });
+
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            @if($errors->any())
+
+                let category_id = "{{ old('category_id') }}";
+                let subcategory_id = "{{ old('subcatid') }}";
+                let formtype = "{{ old('formtype') }}";
+                let user_id = "{{ old('user_id') }}";
+
+                selectedUserId = "{{ old('user_id') }}";
+
+                @if(old('fullname'))
+
+                    $("#customerCard").show();
+
+                    $("#categoryBox").show();
+
+                    $("#customerName").text("{{ old('fullname') }}");
+
+                    $("#customerMobile").text("{{ old('mobile') }}");
+
+                    $("#customerEmail").text("{{ old('email') }}");
+
+                    $("#customerAvatar").html(
+                        "{{ strtoupper(substr(old('fullname'), 0, 1)) }}"
+                    );
+
+                    $("#customer_mobile").val("{{ old('mobile') }}");
+
+                    $("#customer_email").val("{{ old('email') }}");
+
+                @endif
+
+                                        if (category_id != '' && subcategory_id != '') {
+
+                    $("#categoryBox").show();
+
+                    $("#loaderBox").show();
+
+                    $.ajax({
+
+                        url: "{{ url('admin/render-ad-form') }}",
+
+                        type: "POST",
+
+                        data: {
+
+                            formtype: formtype,
+                            category_id: category_id,
+                            subcategory_id: subcategory_id,
+                            user_id: user_id,
+                            _token: "{{ csrf_token() }}"
+
+                        },
+
+                        success: function (response) {
+
+                            $("#loaderBox").hide();
+
+                            $("#dynamicFormArea").html(response);
+
+                            $("#category_id").val(category_id);
+
+                            let options = `
+                                                        <option value="">
+                                                            Select Subcategory
+                                                        </option>
+                                                    `;
+
+                            if (subcategories[category_id]) {
+
+                                subcategories[category_id].forEach(function (sub) {
+
+                                    let selected = sub.id == subcategory_id ? 'selected' : '';
+
+                                    options += `
+                                                                <option value="${sub.id}" ${selected}>
+                                                                    ${sub.name}
+                                                                </option>
+                                                            `;
+                                });
+                            }
+
+                            $("#subcategory_id").html(options);
+
+                        }
+
+                    });
+
+                }
+
+            @endif
+
+                });
 
     </script>
 @endsection

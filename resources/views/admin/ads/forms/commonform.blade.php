@@ -386,3 +386,174 @@ $(document).on("change", "#city", function () {
 });
 
     </script>
+
+<script>
+
+$(document).on("submit", "#login_form", function(e) {
+
+    $(".frontend-error").remove();
+
+    let hasError = false;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get Values
+    |--------------------------------------------------------------------------
+    */
+
+    let ad_title = $("input[name='ad_title']").val().trim();
+
+    let description = $("#description").val().trim();
+
+    let price = $("#price").val().trim();
+
+    let state = $("#state").val();
+
+    let city = $("#city").val();
+
+    let neighbourhood = $("#neibourhood").val().trim();
+
+    let file = $("#imgupload")[0].files.length;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ad Title
+    |--------------------------------------------------------------------------
+    */
+
+    if (ad_title == '') {
+
+        $("input[name='ad_title']").after(
+            '<small class="text-danger frontend-error">Post title is required</small>'
+        );
+
+        hasError = true;
+
+    } else if (ad_title.length > 50) {
+
+        $("input[name='ad_title']").after(
+            '<small class="text-danger frontend-error">Maximum 50 characters allowed</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Description
+    |--------------------------------------------------------------------------
+    */
+
+    if (description == '') {
+
+        $("#description").after(
+            '<small class="text-danger frontend-error">Description is required</small>'
+        );
+
+        hasError = true;
+
+    } else if (description.length > 2500) {
+
+        $("#description").after(
+            '<small class="text-danger frontend-error">Maximum 2500 characters allowed</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Price
+    |--------------------------------------------------------------------------
+    */
+
+    if (price == '') {
+
+        $("#price").after(
+            '<small class="text-danger frontend-error">Price is required</small>'
+        );
+
+        hasError = true;
+
+    } else if (!$.isNumeric(price)) {
+
+        $("#price").after(
+            '<small class="text-danger frontend-error">Enter valid price</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Image
+    |--------------------------------------------------------------------------
+    */
+
+    if (file == 0 && $("#blah").attr('src') == '#') {
+
+        $("#image").after(
+            '<small class="text-danger frontend-error d-block">At least 1 image is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Location
+    |--------------------------------------------------------------------------
+    */
+
+    if ($("#list").hasClass("current")) {
+
+        if (state == '') {
+
+            $("#state").after(
+                '<small class="text-danger frontend-error">Please select state</small>'
+            );
+
+            hasError = true;
+        }
+
+        if (city == '') {
+
+            $("#city").after(
+                '<small class="text-danger frontend-error">Please select city</small>'
+            );
+
+            hasError = true;
+        }
+
+        if (neighbourhood == '') {
+
+            $("#neibourhood").after(
+                '<small class="text-danger frontend-error">Neighbourhood is required</small>'
+            );
+
+            hasError = true;
+        }
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stop Submit
+    |--------------------------------------------------------------------------
+    */
+
+    if (hasError) {
+
+        e.preventDefault();
+
+        $('html, body').animate({
+
+            scrollTop: $(".frontend-error").first().offset().top - 120
+
+        }, 500);
+
+    }
+
+});
+
+</script>

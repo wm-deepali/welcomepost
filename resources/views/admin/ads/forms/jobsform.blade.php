@@ -521,7 +521,196 @@
 
 $(document).on('input', '#salary_to', restrictNumber);
 
-       
+     
+
+$(document).on("submit", "#login_form", function(e) {
+
+    $(".frontend-error").remove();
+
+    let hasError = false;
+
+    let salary_period = $("#hidden-salary-period").val();
+    let position_type = $("#hidden-position-type").val();
+    let salary_from = $("#salary_from").val().trim();
+    let salary_to = $("#salary_to").val().trim();
+    let ad_title = $("#ad_title").val().trim();
+    let description = $("#description").val().trim();
+    let state = $("#state").val();
+    let city = $("#city").val();
+    let neighbourhood = $("#neibourhood").val().trim();
+
+    let file = $("#imgupload")[0].files.length;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Salary Period
+    |--------------------------------------------------------------------------
+    */
+
+    if (salary_period == '') {
+
+        $(".salary_period").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select salary period</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Position Type
+    |--------------------------------------------------------------------------
+    */
+
+    if (position_type == '') {
+
+        $(".position_type").last().after(
+            '<small class="text-danger frontend-error d-block mt-2">Please select position type</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Salary From
+    |--------------------------------------------------------------------------
+    */
+
+    if (salary_from == '' || parseInt(salary_from) < 0) {
+
+        $("#salary_from").after(
+            '<small class="text-danger frontend-error">Enter valid salary from</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Salary To
+    |--------------------------------------------------------------------------
+    */
+
+    if (salary_to == '' || parseInt(salary_to) < 0) {
+
+        $("#salary_to").after(
+            '<small class="text-danger frontend-error">Enter valid salary to</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Title
+    |--------------------------------------------------------------------------
+    */
+
+    if (ad_title == '') {
+
+        $("#ad_title").after(
+            '<small class="text-danger frontend-error">Post title is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Description
+    |--------------------------------------------------------------------------
+    */
+
+    if (description == '') {
+
+        $("#description").after(
+            '<small class="text-danger frontend-error">Description is required</small>'
+        );
+
+        hasError = true;
+
+    } else if (description.length > 2500) {
+
+        $("#description").after(
+            '<small class="text-danger frontend-error">Description max 2500 characters</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Image
+    |--------------------------------------------------------------------------
+    */
+
+    if (file == 0 && $("#blah").attr('src') == '') {
+
+        $("#image").after(
+            '<small class="text-danger frontend-error d-block">At least 1 image is required</small>'
+        );
+
+        hasError = true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | State
+    |--------------------------------------------------------------------------
+    */
+
+    if ($("#list").hasClass("current")) {
+
+        if (state == '') {
+
+            $("#state").after(
+                '<small class="text-danger frontend-error">Please select state</small>'
+            );
+
+            hasError = true;
+        }
+
+        if (city == '') {
+
+            $("#city").after(
+                '<small class="text-danger frontend-error">Please select city</small>'
+            );
+
+            hasError = true;
+        }
+
+        if (neighbourhood == '') {
+
+            $("#neibourhood").after(
+                '<small class="text-danger frontend-error">Neighbourhood is required</small>'
+            );
+
+            hasError = true;
+        }
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stop Submit
+    |--------------------------------------------------------------------------
+    */
+
+    if (hasError) {
+
+        e.preventDefault();
+
+        $('html, body').animate({
+
+            scrollTop: $(".frontend-error").first().offset().top - 120
+
+        }, 500);
+
+    }
+
+});
+
    
     
                             </script>
